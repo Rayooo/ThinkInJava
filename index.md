@@ -2,5 +2,5 @@ index
 
 跳转
 
-[link]: https://rayooo.github.io/ThinkInJava/a.md
+[测试跳转](ThinkInJava/a)
 
