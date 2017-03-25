@@ -25,3 +25,31 @@
 9.join，一个线程可以在其他线程上调用join方法，其效果是等待一段时间，直到第二个线程结束才继续执行，如果某个线程在另一个线程t上调用t.join()，此线程将被挂起，直到目标线程结束才恢复，t.isAlive()返回false，join可以调用interrupt()中断
 
 10.捕获异常，可以通过Executor
+
+### 共享受限资源
+
+1.防止不正确访问资源
+
+2.解决共享资源的竞争
+
+-   synchronized加锁，如果某个任务对标记synchronized的方法调用中，那么在这个线程返回之前，所有要调用类中任何标记synchronized方法的线程都会被阻塞
+-   使用显示的Lock对象(lock = new ReentrantLock()  lock.lock()   lock.unlock()   )
+-   ReentrantLock，见AttemptLocking，它提供了尝试获取但最终未获取锁，显示的Lock对象在加锁和释放锁方面比Synchronized提供了更细粒度的控制力
+
+3.原子性和易变性
+
+4.原子类（AtomicInteger, AtomicLong, AtomicReference）
+
+5.临界区，同步控制块，在进入此段代码以前，必须得道syncObject对象的锁
+
+```java
+synchronized(syncObject){
+  	//This code can be accessed by only one task at a time
+  	//同一时刻只能有一个任务／线程访问它
+}
+```
+
+6.在其他对象上同步,见SyncObject.java，DualSync.f()通过整个方法同步，而g()在syncObject上同步的synchronized块，这两个块是相互独立的
+
+7.线程本地储存（线程分配自己的储存，不太理解）
+
