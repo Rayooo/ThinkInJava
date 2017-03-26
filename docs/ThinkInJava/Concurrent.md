@@ -57,3 +57,30 @@ synchronized(syncObject){
 
 1.装饰性花园OrnamentalGarden，演示了并发递增一个值，一个线程控制一道门，花园中有多道门，Count计算进入花园总的人数。
 
+2.中断线程，使用Executor的interrupt()，见Interrupting.java
+
+### 线程之间的协作
+
+1.调用sleep()和Thread.yield()时并没有释放锁，而当一个任务在方法里遇到了对wait()的调用的时候，线程的执行被挂起，对象上的锁被释放，wait()可以通过notify()或notifyAll()或者令时间到，从wait()恢复执行，wait是基类Object的一部分而不属于Thread的一部分，示例见WaxOMatic.java
+
+2.生产者消费者例子，见Restaurant.java，代码有点问题
+
+3.解决并发问题的构件
+
+-   CountDownLatch用来同步一个或多个任务，强制它们等待由其他任务执行的一组操作完成
+-   CyclicBarrier创建一组任务，他们并行地执行工作，然后在进行下一个步骤之前等待，直至所有任务都完成
+-   DelayQueue，无界的BlockingQueue，用于放置实现了Delayed接口的对象，其中的对象只能在到期时才能从队列中取走，这种队列是有序的，即队头对象的延迟到期的时间最长。
+-   PriorityBlockingQueue，一个优先级队列，它具有可阻塞的读取操作
+-   ScheduledExecutor，可设置Runnable对象在将来某个时刻执行
+-   Semaphore，正常的锁（concurrent.locks或synchronized锁）在任何时刻都只允许一个任务访问一项资源，而计数信号量允许N个任务同时访问这个资源（对象池的实现）
+-   Exchanger，在两个任务之间交换对象的栅栏，当这些任务进入栅栏时，他们各自拥有一个对象，当他们离开时，他们都拥有之前由对象持有的对象，Exchanger的典型应用场景是：一个任务在创建对象，这些对象的生产代代价很高昂，而另一个任务在消费这些对象，通过这种方式，可以有更多的对象在被创建的同时被消费
+
+### 免锁容器
+
+1.通用策略：对于容器的修改和读取操作同时发生，只要读取者只能看到完成修改的结果即可。修改是在容器数据结构的某个部分的一个单独的副本（有的是整个数据结构的副本上）执行的，并且这个副本在修改过程中是不可视的。只有当修改完成时，被修改的结构才会自动地与主数据结构进行交换，之后读取者就可以看到这个修改了。
+
+2.CopyOnWriteArrayList中，写入将导致创建整个底层数组的副本，而源数组将保留在原地，使得复制的数组在被修改时，读取操作可以安全地执行。当修改完成时，一个原子性的操作将新的数组换入，使得心得读取操作可以看到这个新的修改
+
+3.CopyOnWriteArraySet将使用CopyOnWriteArrayList来实现免锁行为
+
+4.ConcurrentHashMap和ConcurrentLinkedQueue使用了类似的技术
