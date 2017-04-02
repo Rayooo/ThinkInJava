@@ -37,8 +37,8 @@
 
 1.  比较
     -   Set(interface)   存入Set的每个元素都必须是唯一的，因为Set不保存重复元素，加入Set的元素必须定义equals()方法以确保对象的唯一性，Set和Collection有完全一样的接口，Set接口不保证维护元素的次序
-    -   HashSet  默认选择，为快速查找而设计的Set，存入HashSet的元素必须定义HashCode()
-    -   TreeSet   保持次序的Set，底层为树结构（红黑树结构），使用它可以从Set中提取有序的序列，元素必须实现Comparable接口
+    -   HashSet  默认选择，为快速查找而设计的Set，存入HashSet的元素必须定义HashCode()，底层采用HashMap实现。HashSet是非线程安全的，多线程环境下建议使用CopyOnWriteArraySet
+    -   TreeSet   保持次序的Set，底层为树结构（红黑树结构），使用它可以从Set中提取有序的序列，元素必须实现Comparable接口，底层采用TreeMap实现
     -   LinkedHashSet   具有HashSet的查询速度，且内部使用链表维护元素的顺序（插入的次序）。于是在使用迭代器遍历Set时，结果会按元素插入的次序显示，元素也必须定义hashCode()方法
 
 2.  必须为散列储存和树型储存都创建一个equals()方法，但是hashCode()只有在这个类将会被置于HashSet或者LinkedHashSet中才是必须的，但是对于良好的编程风格而言，应该在覆盖equals()方法时，同时覆盖hashCode()方法
@@ -67,9 +67,14 @@
 
 ### Map
 
-HashMap
+1.  比较
+    -   HashMap，基于散列的实现，取代了Hashtable，插入和查询键值对的开销是固定的，可以通过构造器设置容量和负载因子，以调整容器的性能
+    -   LinkedHashMap，类似于HashMap，但是迭代遍历它时，取得的键值对的顺序是其插入顺序，或者是最近最少使用（LRU）的次序，只比HashMap慢一点，但是在迭代访问时反而更快，因为它使用链表维护内部次序
+    -   TreeMap，基于红黑树实现，查看键或键值对时，他们会被排序，TreeMap的特点在于所得到的结果是经过排序的，TreeMap是唯一的带有subMap()方法的Map，它可以返回一个子树，是SortedMap(接口)的唯一实现
+    -   WeakHashMap，弱键映射，允许释放映射所指向的对象，这是为解决某类特殊问题而设计的，如果映射之外没有引用指向某个键，则此键可以被垃圾收集器回收
+    -   IdentityHashMap，使用==代替equals对键进行比较的散列映射，专为解决特殊问题而设计
+2.  LinkedHashMap，它为了提高速度，它散列化了所有的元素。如果采用基于访问的最近最少使用(LRU)算法，于是没有被访问过的（可以看作需要删除的）元素就会出现在队列的前面。见LinkedHashMapDemo.java
 
-HashTable
+### 同步控制
 
-TreeMap
-
+Collections类有办法能够自动同步整个容器，见SynchronizationCollections.java
