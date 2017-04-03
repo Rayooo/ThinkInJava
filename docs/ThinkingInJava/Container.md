@@ -57,7 +57,7 @@
 
 1.  LinkedList提供了方法以支持队列的行为，并且它实现了Queue接口，因此LinkedList可以用作Queue的一种实现
 2.  PriorityQueue（类），优先级队列，通过自己的Comparator来修改优先级队列的排队顺序
-3.  Deque（没有实现），双向队列，在LinkedList中包含双向队列的方法，但是在Java标准类库中没有任何显示的用于双向队列的接口。因此LinkedList无法去实现这样的接口，也无法向上转型成Queue这样去向上转型到Deque，但是可以组合创建一个Deque类，并且直接从LinkedList中暴露相关的方法。
+3.  Deque（没有实现），双向队列，在LinkedList中包含双向队列的方法。
 
 ### Stack
 
