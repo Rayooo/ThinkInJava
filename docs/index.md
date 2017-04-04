@@ -4,6 +4,10 @@
 
 [容器](ThinkingInJava/Container)
 
+[枚举](ThinkingInJava/Enum)
+
+[注解](ThinkingInJava/annotation)
+
 
 
 >   深入理解Java虚拟机
