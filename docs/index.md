@@ -6,7 +6,7 @@
 
 [枚举](ThinkingInJava/Enum)
 
-[注解](ThinkingInJava/annotation)
+[注解](ThinkingInJava/Annotation)
 
 
 
