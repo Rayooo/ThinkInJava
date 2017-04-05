@@ -1,4 +1,4 @@
-package annotations;
+package annotations.useCase;
 
 /**
  * Created by Ray on 2017/4/4.

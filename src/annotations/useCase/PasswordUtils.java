@@ -1,4 +1,4 @@
-package annotations;
+package annotations.useCase;
 
 import java.util.List;
 

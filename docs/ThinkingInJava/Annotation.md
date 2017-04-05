@@ -20,5 +20,11 @@ Java内置三种标准注解
 
 ### 定义注解，编写注解处理器
 
-见UseCase.java,  PasswordUtils.java, UseCaseTracker.java，Method.getAnnotation()方法返回指定类型的注解对象，如果被注解的方法上没有该类型的注解，则返回null值
+1.见annotations/useCase/UseCase.java,  PasswordUtils.java, UseCaseTracker.java，Method.getAnnotation()方法返回指定类型的注解对象，如果被注解的方法上没有该类型的注解，则返回null值
+
+2.默认值限制，元素不能有不确定的值，元素必须要么具有默认值，要么在使用注解时提供元素的值，而且不能以null作为其值。建议在使用注解时提供default
+
+3.生成外部文件，比如基本对象/关系映射，自动生成数据库表，见annotations/database，如果注解内只有唯一的一个需要赋值的元素，那么就可以无需使用名-值对的这种语法。@SQLString内，嵌入了@Constraints注解。
+
+
 
