@@ -20,11 +20,15 @@ Java内置三种标准注解
 
 ### 定义注解，编写注解处理器
 
-1.见annotations/useCase/UseCase.java,  PasswordUtils.java, UseCaseTracker.java，Method.getAnnotation()方法返回指定类型的注解对象，如果被注解的方法上没有该类型的注解，则返回null值
+1.见annotations/useCase/UseCase.java,  PasswordUtils.java, UseCaseTracker.java，Method.getAnnotation()方法返回指定类型的注解对象，如果被注解的方法上没有该类型的注解，则返回null值，见TableCreator.java，通过forName()加载每一个类，Class<?>中的<?> 代表通配符，未知的类型，通过Class<?>，可以声明一个Class类使得它能是任何类型的Class类
 
 2.默认值限制，元素不能有不确定的值，元素必须要么具有默认值，要么在使用注解时提供元素的值，而且不能以null作为其值。建议在使用注解时提供default
 
 3.生成外部文件，比如基本对象/关系映射，自动生成数据库表，见annotations/database，如果注解内只有唯一的一个需要赋值的元素，那么就可以无需使用名-值对的这种语法。@SQLString内，嵌入了@Constraints注解。
 
+4.注解不支持继承，不能使用关键字extends来继承某个@interface
 
+5.对于Class<?>这篇解释得比较好 http://stackoverflow.com/questions/9921676/what-does-class-mean-in-java
+
+6.编写注解涉及到反射的知识比较多
 
