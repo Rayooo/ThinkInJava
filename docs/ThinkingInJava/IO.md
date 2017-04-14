@@ -65,4 +65,16 @@
 
 2.文件加锁，它允许我们同步访问某个作为共享资源的文件，文件锁对其他的操作系统进程是可见的，Java的文件加锁直接映射到了本地操作系统的加锁工具，见io/FileLocking.java。调用tryLock()和lock()可以获得整个文件的FileLock，tryLock()是非阻塞式的，它设法获取锁，但是如果不能获得，它将直接从方法调用返回，lock()是阻塞式的，它要阻塞进程直到锁可以获得，或是调用lock()的线程中断，或者调用lock()的通道关闭。也可以指定参数使文件的一部分上锁
 
-3.对映射文件的部分加锁，见io/LockingMappedFiles.java
+3.对映射文件的部分加锁，见io/LockingMappedFiles.java，文件映射通常应用于极大的文件，我们可能需要对这种巨大的文件进行部分加锁，以便其他进程可以修改文件中未被加锁的部分，例如数据库就是这样。线程类LockAndModify创建了缓冲区和slice()，然后在run()中，获得文件通道上的锁（不能获得缓冲器上的锁，只能是通道上的）。lock()调用类似于获得一个对象的线程锁，我们现在处在临界区，即对该部分的文件据哟独占访问权。显式地为FileLock对象调用release()来释放锁
+
+###  压缩
+
+1.使用GZIP进行简单的压缩，读写方法见io/GZIPCompress.java，使用GZIPOutputStream和GZIPInputStream即可
+
+2.Java档案文件，JAR（Java ARchive），jar命令
+
+### 对象序列化
+
+1.Java的对象序列化奖那些实现了Serializable接口的对象转换成一个字节序列，并能够在以后将这个字节序列完全恢复为原来的对象。
+
+2.序列化的控制，如果不希望对象的某一部分被序列化，可通过实现Externalizable接口，对序列化过程进行控制，同时增加了两个方法，writeExternal()和readExternal()，这两个方法在序列化和反序列化的过程中自动被调用，也可以使用transient（瞬时）关键字

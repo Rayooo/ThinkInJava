@@ -50,12 +50,14 @@ public class LockingMappedFiles {
         @Override
         public void run() {
             try {
+                //部分加锁
                 FileLock fl = fileChannel.lock(start, end, false);
                 System.out.println("Locked : " + start + " to " + end);
 
                 while (buffer.position() < buffer.limit() - 1){
                     buffer.put((byte)(buffer.get() + 1));
                 }
+                //锁释放
                 fl.release();
                 System.out.println("Released: " + start + " to " + end);
 
