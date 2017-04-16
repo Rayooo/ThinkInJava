@@ -10,7 +10,7 @@
 
 [I/O](ThinkingInJava/IO)
 
-
+[运行时类型信息](ThinkingInJava/RunTimeTypeInformation)
 
 >   深入理解Java虚拟机
 
