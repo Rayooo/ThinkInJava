@@ -23,3 +23,17 @@ RTTI(Run-time type information)运行时类型信息，使得你可以在程序�
 ### 类转型前先做检查
 
 1.编译器运行自由地做向上转型的赋值操作，而不需要任何显式的转型操作。如编译器知道Circle肯定是一个Shape。但是编译器无法知道对于Shape到底是什么Shape，它可能就是Shape，或是Shape的子类型，如Circle，Square，Triangle或其他。因此，如果不使用显示的类型转换，编译器就不允许你执行向下转型赋值。使用instanceof检查对象是不是某个特定类型的实例。
+
+2.Object.getClass() 与 Class.class 与 instanceof ，instanceof保持了类型的概念，它指的是“你是这个类吗，或者你是这个类的派生类吗？”而如果用 getClass() 或是 .class 就不考虑继承，它是这个确切的类型，或者不是。
+
+### 反射
+
+1.反射机制提供了足够的支持，使得能够创建一个在编译器完全未知的对象，并调用此对象的方法。
+
+2.Class的getMethods() 和 getConstructors() 方法分别返回Method对象的数组和Constructors对象的数组。这两个类都提供了深层的方法，用以解析其对象所代表的方法，并获取其名字，输入参数及返回值。见typeinfo/ShowMethods
+
+### 动态代理
+
+1.Java的动态代理可以动态地创建代理并动态地处理对所代理的方法调用。在动态代理上所做的所有调用都会被重定向到单一的调用处理器上。
+
+2.通过调用静态方法Proxy.newProxyInstance()可以创建动态代理，这个方法需要得到一个类加载器，一个你希望该代理实现的接口列表，以及InvocationHandler接口的一个实现。动态代理可以将所有调用重定向到调用处理器，因此通常会向调用处理器的构造器传递给一个实际对象的引用，从而使得调用处理器在执行其中介任务时，可以将请求转发。见typeinfo/SimpleDynamicProxy.java
