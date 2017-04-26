@@ -12,6 +12,10 @@
 
 [运行时类型信息](ThinkingInJava/RunTimeTypeInformation)
 
+[泛型](ThinkingInJava/Generics)
+
+[Java8](ThinkingInJava/Java8)
+
 >   深入理解Java虚拟机
 
 [垃圾收集器与内存分配策略](JVM/GC)
