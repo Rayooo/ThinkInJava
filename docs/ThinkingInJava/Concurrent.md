@@ -53,6 +53,31 @@ synchronized(syncObject){
 
 7.线程本地储存（线程分配自己的储存，不太理解）
 
+8.ReentrantLock 互斥锁，ReentrantReadWriteLock读写锁，接口ReadWriteLock 内部是两个Lock接口实现的。ReentrantReadWriteLock中定义了2个内部类, ReentrantReadWriteLock.ReadLock和ReentrantReadWriteLock.WriteLock, 分别用来代表读取锁和写入锁. ReentrantReadWriteLock对象提供了readLock()和writeLock()方法, 用于获取读取锁和写入锁. 
+
+-   读取锁允许多个reader线程同时持有, 而写入锁最多只能有一个writter线程持有.
+-   读写锁的使用场合: 读取共享数据的频率远大于修改共享数据的频率. 在上述场合下, 使用读写锁控制共享资源的访问, 可以提高并发性能.
+-   如果一个线程已经持有了写入锁, 则可以再持有读写锁. 相反, 如果一个线程已经持有了读取锁, 则在释放该读取锁之前, 不能再持有写入锁.
+-   可以调用写入锁的newCondition()方法获取与该写入锁绑定的Condition对象, 此时与普通的互斥锁并没有什么区别. 但是调用读取锁的newCondition()方法将抛出异常. 
+
+```java
+public interface ReadWriteLock {
+    /**
+     * Returns the lock used for reading.
+     *
+     * @return the lock used for reading
+     */
+    Lock readLock();
+
+    /**
+     * Returns the lock used for writing.
+     *
+     * @return the lock used for writing
+     */
+    Lock writeLock();
+}
+```
+
 ### 终结任务
 
 1.装饰性花园OrnamentalGarden，演示了并发递增一个值，一个线程控制一道门，花园中有多道门，Count计算进入花园总的人数。
