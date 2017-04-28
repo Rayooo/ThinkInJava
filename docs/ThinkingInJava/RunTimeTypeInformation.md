@@ -32,6 +32,28 @@ RTTI(Run-time type information)运行时类型信息，使得你可以在程序�
 
 2.Class的getMethods() 和 getConstructors() 方法分别返回Method对象的数组和Constructors对象的数组。这两个类都提供了深层的方法，用以解析其对象所代表的方法，并获取其名字，输入参数及返回值。见typeinfo/ShowMethods
 
+```java
+for (Method method : userBeanClass.getDeclaredMethods()) {
+    if(method.isAnnotationPresent(Invoke.class)){   //判断是否被@Invoke修饰
+        if(Modifier.isStatic(method.getModifiers())){   //如果是static方法
+            method.invoke(method,"Ray");
+        }
+        else{
+            Class[] params = {String.class, int.class};
+            Constructor constructor = userBeanClass.getDeclaredConstructor(params);// 获取参数格式为 String,long 的构造函数
+            Object userBean = constructor.newInstance("Ray",123); // 利用构造函数进行实例化，得到 Object
+            if(Modifier.isPrivate(method.getModifiers())){
+                method.setAccessible(true);         //如果是private方法，需要获取其调用权限
+            }
+            method.invoke(userBean);
+        }
+
+    }
+}
+```
+
+3.调用方法，见reflection/ReflectionTest
+
 ### 动态代理
 
 1.Java的动态代理可以动态地创建代理并动态地处理对所代理的方法调用。在动态代理上所做的所有调用都会被重定向到单一的调用处理器上。

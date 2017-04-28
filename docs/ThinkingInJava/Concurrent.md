@@ -84,3 +84,130 @@ synchronized(syncObject){
 3.CopyOnWriteArraySet将使用CopyOnWriteArrayList来实现免锁行为
 
 4.ConcurrentHashMap和ConcurrentLinkedQueue使用了类似的技术
+
+### volatile关键字
+
+1.见volatileTest/volatileTest
+
+http://www.ziwenxie.site/2017/04/24/java-multithread-volatile/
+
+2.JVM内存模型。Java内存模型规定了所有的变量都储存在主内存中(即物理硬件的内存)，每条线程还具有自己的工作内存（工作内存可能位于处理器的高速缓存之中），线程的工作内存中保存了该线程使用到的变量的主内存副本拷贝，线程对变量的所有操作（读取，赋值等）都必须在工作内存中进行，而不能直接读写主内存的变量。不同线程之间无法访问对方工作内存之间的变量，线程间变量值的传递需要通过主内存来完成。在并发编程中，会遇到以下三个问题：原子性，可见性，有序性
+
+3.有序性
+
+```java
+public class TestCase1 {
+
+    public static int number;
+
+    public static boolean isinited;
+
+    public static void main(String[] args){
+        new Thread(() -> {
+            while (!isinited){
+                Thread.yield();
+            }
+            System.out.println(number);
+        }).start();
+        number = 20;
+        isinited = true;
+    }
+
+}
+```
+
+对于上面的代码，我们本意是想输出20，而可能会输出0。因为有时候为了提高程序的效率，JVM会做进行及时编译，也就是进行指令重排序，将isInited = true 放在 number = 20 前面执行，这样在单线程下面没有问题，而在多线程情况下就会出现重排序问题。如果将 number 声明为 volatile 就可以很好地解决这个问题，这可用静止JVM进行指令重排序
+
+4.可见性，对于变量a，当线程1要修改a的值，首先要将a的值从主内存复制过来，然后将a的值+1，再将a的值复制回主内存。在单线程情况下，没有任何问题。但是在多线程情况下，还有个线程2，在线程1修改a的值的时候，线程2也从a的值复制过来+1，随后线程1和线程2先后将a的值复制回主内存，但是主内存a的值最终只是+1而不是+2。使用volatile可以解决这个问题，可以保证在线程1修改a的值之后立即将修改值同步到主内存中，这样线程2拿到的a的值就是线程1已经修改过的值了
+
+5.原子性，原子性值CPU在执行一条语句的时候，不会中途转去执行另外的语句。如 i = 1 是一个原子操作，而 ++i 就不是一个原子操作了，因为它首先读取i的值，再修改i的值，再写入主存
+
+```java
+    public volatile int v = 0;
+
+    public static final int threadCount = 10;
+
+    public void increase() {
+        v++;                                //++为非原子操作
+    }
+
+    public synchronized void increaseSync(){
+        v++;
+    }
+
+    Lock lock = new ReentrantLock();
+
+    public void increaseLock(){
+        lock.lock();
+        try {
+            v++;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args){
+        TestCase2 testCase = new TestCase2();
+
+        for (int i = 0; i < threadCount; i++) {
+            new Thread(() -> {
+                for (int j = 0; j < 1000; j++) {
+//                    testCase.increase();
+//                    testCase.increaseSync();
+                    testCase.increaseLock();
+                }
+            }).start();
+        }
+
+        while (Thread.activeCount() > 1){
+            Thread.yield();
+        }
+
+        System.out.println(testCase.v);
+        //若采用 increase() 无法到达10000，测试为9364
+        //采用increaseSync() 可到达10000
+        //采用increaseLock() 可达到10000
+
+
+    }
+
+}
+```
+
+volatile 不能保证程序的原子性，调用increase() 方法无法达到10000，因为v++并不是一个原子操作，使用synchronized则可以很好地解决，或者用lock也可以
+
+如何保证unlock()一定能够解锁呢？只需要放到finally块中，unlock()的机制保证一定能够解锁，而前面的操作万一抛出异常了，就不能执行到unlock()的方法
+
+6.单例模式
+
+```java
+public class Singleton {
+
+    //volatile的单例模式
+    private volatile static Singleton instance;
+
+    public static Singleton getInstance(){
+        if(instance == null){
+            synchronized (Singleton.class){
+                if(instance == null){
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static void main(String[] args){
+        Singleton.getInstance();
+    }
+
+}
+```
+
+instance 必须要用volatile 修饰，因为new Singleton分为三个步骤
+
+1.  给instance指向的对象分配内存，并设置初始值为null（根据JVM类加载机制的原理，对于静态变量这一步应该在 new Singleton 之前就已经完成了）。
+2.  执行构造函数真正初始化instance
+3.  将instance指向对象分配内存空间（分配内存空间之后instance就是非null了）
+
+步骤2，3可以颠倒，如果线程1在执行步骤3后没有执行步骤2，而是被线程2抢占了，线程2得到的instance是非null的，但是instance却还没有初始化，使用volatile可以保证程序的有序性
