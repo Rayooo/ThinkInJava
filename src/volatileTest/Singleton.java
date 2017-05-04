@@ -6,13 +6,15 @@ package volatileTest;
 public class Singleton {
 
     //volatile的单例模式
-    private volatile static Singleton instance;
+    private volatile static Object instance;
 
-    public static Singleton getInstance(){
+    private Singleton(){}
+
+    public static Object getInstance(){
         if(instance == null){
             synchronized (Singleton.class){
                 if(instance == null){
-                    instance = new Singleton();
+                    instance = new Object();
                 }
             }
         }
@@ -20,7 +22,17 @@ public class Singleton {
     }
 
     public static void main(String[] args){
-        Singleton.getInstance();
-    }
 
+        for (int i = 0; i < 10; i++) {
+            new Thread(Singleton::getInstance).start();
+        }
+
+    }
 }
+
+
+
+
+
+
+
