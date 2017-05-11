@@ -4,6 +4,10 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -31,6 +35,29 @@ public class DirList {
             }
         }
     }
+
+
+    @Test
+    public void pathTest() throws IOException {
+        Path path = Paths.get(".");
+        System.out.println(path.getFileName());     //DirList.java
+        System.out.println(path.getName(0));        //Users
+        System.out.println(path.getRoot());         //  /
+        System.out.println(path.endsWith("DirList.java"));  //true
+        System.out.println(path.getFileSystem());   //sun.nio.fs.MacOSXFileSystem
+        System.out.println(path.getNameCount());        //8
+//        System.out.println(path.subpath(2,5));          //  Documents/GitHub/ThinkInJava
+        System.out.println(path.isAbsolute());
+        System.out.println(path.normalize());           //去除冗余  如 /home/../etc/../../a 会去掉../
+        System.out.println(path.toRealPath(LinkOption.NOFOLLOW_LINKS));    //   /Users/Ray/Documents/GitHub/ThinkInJava
+    }
+
+    @Test
+    public void fileTest() {
+        File file = new File(".");
+        System.out.println(file.getAbsoluteFile());
+    }
+
 }
 
 /*
