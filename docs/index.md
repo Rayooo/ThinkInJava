@@ -36,5 +36,7 @@
 
 
 
+>   Java 虚拟机规范
 
+[Java虚拟机结构](JVMSpecification/Structure)
 
