@@ -22,7 +22,13 @@
 
 [分布式系统](Middleware/Distributed)
 
+[服务框架](Middleware/RPC)
 
+[数据访问层](Middleware/DataAccessLayer)
+
+[消息中间件](Middleware/MOM)
+
+[软负载中心与集中配置管理](Middleware/Management)
 
 >   深入理解Java虚拟机
 
