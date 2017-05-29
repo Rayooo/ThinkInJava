@@ -30,6 +30,8 @@
 
 [软负载中心与集中配置管理](Middleware/Management)
 
+[构建大型网站的其他要素](Middleware/Other)
+
 >   深入理解Java虚拟机
 
 [垃圾收集器与内存分配策略](JVM/GC)
